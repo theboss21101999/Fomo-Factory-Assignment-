@@ -1,8 +1,13 @@
-// src/pricesSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface Price {
+    id: string;
+    price: number;
+    timestamp: string;
+}
+
 interface PriceState {
-    prices: any[];
+    prices: Price[];
 }
 
 const initialState: PriceState = {
@@ -13,7 +18,7 @@ const pricesSlice = createSlice({
     name: 'prices',
     initialState,
     reducers: {
-        setPrices(state, action: PayloadAction<any[]>) {
+        setPrices(state, action: PayloadAction<Price[]>) {
             state.prices = action.payload;
         },
     },

@@ -16,6 +16,7 @@ import java.util.Map;
 
 @Service
 public class StockPriceService {
+
     @Autowired
     private StockPriceRepository repository;
 
@@ -24,14 +25,23 @@ public class StockPriceService {
     @Scheduled(fixedRate = 30000) // Poll every 30 seconds
     public void fetchAndStorePrices() {
         RestTemplate restTemplate = new RestTemplate();
-        StockPrice[] prices = restTemplate.getForObject(API_URL, StockPrice[].class);
-
-        if (prices != null) {
-            repository.saveAll(Arrays.asList(prices));
+        try {
+            Map<String, Map<String, Object>> prices = restTemplate.getForObject(API_URL, Map.class);
+            if (prices != null) {
+                prices.forEach((symbol, value) -> {
+                    Object priceObj = value.get("usd");
+                    Double price = priceObj instanceof Double ? (Double) priceObj : ((Integer) priceObj).doubleValue();
+                    StockPrice stockPrice = new StockPrice(symbol, price, LocalDateTime.now());
+                    repository.save(stockPrice);
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching prices: " + e.getMessage());
         }
     }
 
     public List<StockPrice> getRecentPrices(String symbol) {
-        return repository.findTop20BySymbolOrderByTimestampDesc(symbol);
+        List<StockPrice> prices = repository.findTop20BySymbolOrderByTimestampDesc(symbol);
+        return prices;
     }
 }

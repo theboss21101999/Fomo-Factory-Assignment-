@@ -1,20 +1,28 @@
-// src/components/ChangeStockModal.tsx
-        import React, { useState } from 'react';
+import React, { useState } from 'react';
 
-        const ChangeStockModal = ({ onChange, onClose }) => {
-        const [symbol, setSymbol] = useState('');
+        interface ChangeStockModalProps {
+        onChange: (newSymbol: string) => void;
+        onClose: () => void;
+        }
 
-        const handleSubmit = () => {
-        onChange(symbol);
-        onClose();
-        };
+        const ChangeStockModal: React.FC<ChangeStockModalProps> = ({ onChange, onClose }) => {
+    const [symbol, setSymbol] = useState('');
 
-        return (
-<div>
-    <h2>Change Stock/Crypto</h2>
-    <input type="text" value={symbol} onChange={(e) => setSymbol(e.target.value)} />
-    <button onClick={handleSubmit}>Submit</button>
-<button onClick={onClose}>Close</button>
+    const handleSubmit = () => {
+    onChange(symbol);
+    onClose();
+    };
+
+    return (
+    <div>
+        <h2>Change Stock Symbol</h2>
+        <input
+                type="text"
+                value={symbol}
+        onChange={(e) => setSymbol(e.target.value)}
+        />
+        <button onClick={handleSubmit}>Submit</button>
+    <button onClick={onClose}>Cancel</button>
         </div>
         );
         };
