@@ -22,7 +22,9 @@ Fomo Factory Assignment
 - Ensure MongoDB is running before starting the backend.
 
 ![Screenshot](Screenshot 2024-07-15 233824.png)
+
 ![Screenshot](Screenshot 2024-07-15 233837.png)
+
 ![Screenshot](Screenshot 2024-07-15 234549.png)
 
 
