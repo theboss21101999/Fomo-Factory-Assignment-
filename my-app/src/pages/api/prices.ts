@@ -6,7 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
         // Replace this with the actual URL of your Spring Boot backend
-        const response = await axios.get(`http://localhost:8080/api/prices?symbol=${symbol}`);
+        const response = await axios.get(`http://localhost:8083/api/prices/${symbol}`);
         res.status(200).json(response.data);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching prices' });

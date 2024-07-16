@@ -1,20 +1,29 @@
 package com.fomofactory.assignment.controller;
+
+
 import com.fomofactory.assignment.model.StockPrice;
 import com.fomofactory.assignment.service.StockPriceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+/**
+ *Author: Bojja Srikar
+ */
 @RestController
 @RequestMapping(value = "/api")
-public class PriceDataController {
+public class StockPriceDataController {
 
-    @Autowired
-    private StockPriceService service;
 
-    @GetMapping("/prices")
-    public ResponseEntity<List<StockPrice>> getPrices(@RequestParam String symbol) {
+    private final StockPriceService service;
+
+    public StockPriceDataController(StockPriceService service) {
+        this.service = service;
+    }
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/prices/{symbol}")
+    public ResponseEntity<List<StockPrice>> getPrices(@PathVariable String symbol) {
         List<StockPrice> prices = service.getRecentPrices(symbol);
 
         if (prices.isEmpty()) {

@@ -5,6 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+/**
+ *Author: Bojja Srikar
+ */
 @Document(collection = "stockPrices")
 public class StockPrice {
     @Id

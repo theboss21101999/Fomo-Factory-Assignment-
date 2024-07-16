@@ -15,8 +15,12 @@ import React, { useEffect } from 'react';
         const prices = useSelector((state: RootState) => state.prices.prices);
 
         const fetchPrices = async () => {
-        const response = await axios.get(`/api/prices?symbol=${symbol}`);
+        try {
+        const response = await axios.get(`http://localhost:8083/api/prices/${symbol}`);
         dispatch(setPrices(response.data));
+        } catch (error) {
+        console.error('Error fetching prices:', error);
+        }
         };
 
         useEffect(() => {
