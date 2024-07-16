@@ -2,13 +2,12 @@ package com.fomofactory.assignment.controller;
 import com.fomofactory.assignment.model.StockPrice;
 import com.fomofactory.assignment.service.StockPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/api") // Adding base path for the controller
+@RequestMapping(value = "/api")
 public class PriceDataController {
 
     @Autowired

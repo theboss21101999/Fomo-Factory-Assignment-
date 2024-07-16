@@ -2,21 +2,19 @@ package com.fomofactory.assignment.service;
 
 import com.fomofactory.assignment.model.StockPrice;
 import com.fomofactory.assignment.repository.StockPriceRepository;
+import jakarta.annotation.PostConstruct;
+import org.jobrunr.jobs.annotations.Job;
+import org.jobrunr.scheduling.JobScheduler;
+import org.jobrunr.spring.annotations.Recurring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-/**
- * Author: Bojja Srikar
- */
 
 @Service
 public class StockPriceService {
@@ -24,9 +22,19 @@ public class StockPriceService {
     @Autowired
     private StockPriceRepository repository;
 
+    @Autowired
+    private JobScheduler jobScheduler;
+
     private final String API_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd";
 
-    @Scheduled(fixedRate = 30000) // Poll every 30 seconds
+    @PostConstruct
+    public void scheduleStartupJob() {
+        Instant someTimeFromNow = Instant.now().plusSeconds(30);
+        jobScheduler.schedule(someTimeFromNow, this::fetchAndStorePrices);
+    }
+
+    @Recurring(id = "fetchStockPrices", cron = "*/30 * * * * *") // Every 30 seconds
+    @Job(name = "Fetch and store stock prices")
     public void fetchAndStorePrices() {
         RestTemplate restTemplate = new RestTemplate();
         try {
@@ -45,7 +53,6 @@ public class StockPriceService {
     }
 
     public List<StockPrice> getRecentPrices(String symbol) {
-        List<StockPrice> prices = repository.findTop20BySymbolOrderByTimestampDesc(symbol);
-        return prices;
+        return repository.findTop20BySymbolOrderByTimestampDesc(symbol);
     }
 }
